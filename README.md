@@ -16,7 +16,7 @@ se = SE(
 output = se(input)
 ```
 ### ECA | [Paper](https://arxiv.org/abs/1910.03151) - [Blog](https://borna-ahz.medium.com/attention-in-computer-vision-part-1-se-ese-and-eca-c5effac7c11e)
-Squeeze-and-excitation (SE) is accessed as follows.
+Efficient channel attention (ECA) is accessed as follows.
 ```python
 from eca import ECA
 
