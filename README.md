@@ -26,3 +26,32 @@ eca = ECA(
         )
 output = eca(input)
 ```
+
+### CBAM | [Paper](https://arxiv.org/abs/1807.06521) - [Blog](https://borna-ahz.medium.com/attention-in-computer-vision-part-2-cbam-and-bam-e482112a26db)
+Convolutional block attention module (CBAM) is accessed as follows.
+```python
+from cbam import CBAM
+
+
+cbam = CBAM(
+        in_dim=in_dim, # Number of channels CBAM receives
+        reduction_factor=reduction_factor, # Reduction factor for channel attention
+        kernel_size=kernel_size, # Kernel size for spatial attention
+        )
+output = cbam(input)
+```
+
+### BAM | [Paper](https://arxiv.org/abs/1807.06514) - [Blog](https://borna-ahz.medium.com/attention-in-computer-vision-part-2-cbam-and-bam-e482112a26db)
+Bottleneck attention module (BAM) is accessed as follows.
+```python
+from bam import BAM
+
+
+bam = BAM(
+        in_dim=in_dim, # Number of channels BAM receives
+        reduction_factor=reduction_factor, # Reduction factor for channel and spatial attention
+        kernel_size=kernel_size, # Dilation for spatial attention
+        )
+output = bam(input)
+```
+
