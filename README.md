@@ -15,6 +15,17 @@ se = SE(
         )
 output = se(input)
 ```
+### eSE | [Paper](https://arxiv.org/abs/1911.06667) - [Blog](https://borna-ahz.medium.com/attention-in-computer-vision-part-1-se-ese-and-eca-c5effac7c11e)
+Effective squeeze-and-excitation (eSE) is accessed as follows.
+```python
+from ese import eSE
+
+
+ese = eSE(
+        in_dim=in_dim, # Number of channels eSE receives
+        )
+output = ese(input)
+```
 ### ECA | [Paper](https://arxiv.org/abs/1910.03151) - [Blog](https://borna-ahz.medium.com/attention-in-computer-vision-part-1-se-ese-and-eca-c5effac7c11e)
 Efficient channel attention (ECA) is accessed as follows.
 ```python
