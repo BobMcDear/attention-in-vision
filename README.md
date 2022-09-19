@@ -66,3 +66,28 @@ bam = BAM(
 output = bam(input)
 ```
 
+### GE | [Paper](https://arxiv.org/abs/1810.12348) - [Blog](https://borna-ahz.medium.com/attention-in-computer-vision-part-3-ge-ec185231468e)
+Gather-excite (GE) is accessed as follows.
+```python
+from bam import BAM
+
+# GE-θ-
+ge_no_params = GENoParams(
+        extent=extent, # Extent factor, 0 for a global extent
+        )
+# GE-θ
+ge_params = GEParams(
+        in_dim=in_dim, # Number of channels GE receives
+        extent=extent, # Extent factor, 0 for a global extent
+        spatial_dim=spatial_dim, # Spatial dimension GE receives, required for a global extent
+        )
+# GE-θ+
+ge_params_plus = GEParamsPlus(
+        in_dim=in_dim, # Number of channels GE receives
+        extent=extent, # Extent factor, 0 for a global extent
+        spatial_dim=spatial_dim, # Spatial dimension GE receives, required for a global extent
+        )
+output_no_params = ge_no_params(input)
+output_params = ge_params(input)
+output_params_plus = ge_params_plus(input)
+```
