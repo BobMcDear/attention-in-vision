@@ -104,7 +104,7 @@ class GEParams(Module):
 		"""
 		super().__init__()
 
-		if extent_ratio == 0:
+		if extent == 0:
 			self.gather = Sequential(
 				Conv2d(
 					in_channels=in_dim,
