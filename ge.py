@@ -36,7 +36,7 @@ class GENoParams(Module):
 		"""
 		super().__init__()
 
-		if extent_ratio == 0:
+		if extent == 0:
 			self.gather = AdaptiveAvgPool2d(
 				output_size=1,
 				)
