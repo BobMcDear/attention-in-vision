@@ -135,7 +135,7 @@ class GEParams(Module):
 					),
 				ReLU(),
 				]
-			layers = layers[::-1]
+			layers = layers[:-1]
 			self.gather = Sequential(*layers)
 
 		self.sigmoid = Sigmoid()
@@ -222,7 +222,7 @@ class GEParamsPlus(Module):
 					),
 				ReLU(),
 				]
-			layers = layers[::-1]
+			layers = layers[:-1]
 			self.gather = Sequential(*layers)
 		
 		bottleneck_dim = in_dim//16
