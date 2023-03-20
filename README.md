@@ -1,9 +1,9 @@
 # Attention in Vision
 ## Description
-This is a PyTorch implementation of popular attention mechanisms in computer vision. You can find the accompanying blog series [here](https://borna-ahz.medium.com/attention-in-computer-vision-part-1-se-ese-and-eca-c5effac7c11e).
+This is a PyTorch implementation of popular attention mechanisms in computer vision.
 ## Modules
 Below is a list of the attention mechanisms available in this repository, as well as their sample usage. For more information, please refer to the paper or article corresponding to each method.
-### SE | [Paper](https://arxiv.org/abs/1709.01507) - [Blog](https://borna-ahz.medium.com/attention-in-computer-vision-part-1-se-ese-and-eca-c5effac7c11e)
+### SE | [Paper](https://arxiv.org/abs/1709.01507)
 Squeeze-and-excitation (SE) is accessed as follows.
 ```python
 from se import SE
@@ -15,7 +15,7 @@ se = SE(
         )
 output = se(input)
 ```
-### eSE | [Paper](https://arxiv.org/abs/1911.06667) - [Blog](https://borna-ahz.medium.com/attention-in-computer-vision-part-1-se-ese-and-eca-c5effac7c11e)
+### eSE | [Paper](https://arxiv.org/abs/1911.06667)
 Effective squeeze-and-excitation (eSE) is accessed as follows.
 ```python
 from ese import eSE
@@ -26,7 +26,7 @@ ese = eSE(
         )
 output = ese(input)
 ```
-### ECA | [Paper](https://arxiv.org/abs/1910.03151) - [Blog](https://borna-ahz.medium.com/attention-in-computer-vision-part-1-se-ese-and-eca-c5effac7c11e)
+### ECA | [Paper](https://arxiv.org/abs/1910.03151)
 Efficient channel attention (ECA) is accessed as follows.
 ```python
 from eca import ECA
@@ -38,7 +38,7 @@ eca = ECA(
 output = eca(input)
 ```
 
-### CBAM | [Paper](https://arxiv.org/abs/1807.06521) - [Blog](https://borna-ahz.medium.com/attention-in-computer-vision-part-2-cbam-and-bam-e482112a26db)
+### CBAM | [Paper](https://arxiv.org/abs/1807.06521)
 Convolutional block attention module (CBAM) is accessed as follows.
 ```python
 from cbam import CBAM
@@ -52,7 +52,7 @@ cbam = CBAM(
 output = cbam(input)
 ```
 
-### BAM | [Paper](https://arxiv.org/abs/1807.06514) - [Blog](https://borna-ahz.medium.com/attention-in-computer-vision-part-2-cbam-and-bam-e482112a26db)
+### BAM | [Paper](https://arxiv.org/abs/1807.06514)
 Bottleneck attention module (BAM) is accessed as follows.
 ```python
 from bam import BAM
@@ -66,7 +66,7 @@ bam = BAM(
 output = bam(input)
 ```
 
-### GE | [Paper](https://arxiv.org/abs/1810.12348) - [Blog](https://borna-ahz.medium.com/attention-in-computer-vision-part-3-ge-ec185231468e)
+### GE | [Paper](https://arxiv.org/abs/1810.12348)
 Gather-excite (GE) is accessed as follows.
 ```python
 from bam import BAM
