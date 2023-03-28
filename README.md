@@ -2,7 +2,8 @@
 ## Description
 This is a PyTorch implementation of popular attention mechanisms in computer vision.
 ## Modules
-Below is a list of the attention mechanisms available in this repository, as well as their sample usage. For more information, please refer to the paper or article corresponding to each method.
+Below is a list of the attention mechanisms available in this repository, as well as their sample usage.
+
 ### SE | [Paper](https://arxiv.org/abs/1709.01507)
 Squeeze-and-excitation (SE) is accessed as follows.
 ```python
@@ -13,7 +14,6 @@ se = SE(
         in_dim=in_dim, # Number of channels SE receives
         reduction_factor=reduction_factor, # Reduction factor for the excitation module
         )
-output = se(input)
 ```
 ### eSE | [Paper](https://arxiv.org/abs/1911.06667)
 Effective squeeze-and-excitation (eSE) is accessed as follows.
@@ -24,7 +24,6 @@ from ese import eSE
 ese = eSE(
         in_dim=in_dim, # Number of channels eSE receives
         )
-output = ese(input)
 ```
 ### ECA | [Paper](https://arxiv.org/abs/1910.03151)
 Efficient channel attention (ECA) is accessed as follows.
@@ -32,10 +31,16 @@ Efficient channel attention (ECA) is accessed as follows.
 from eca import ECA
 
 
+# ECA with automatically-calculated kernel size
+eca = ECA(
+        beta=beta, # beta value used in calculating the kernel size
+        gamma=gamma, # gamma value used in calculating the kernel size
+        in_dim=in_dim, # Number of channels ECA receives, required when kernel size is None
+        )
+# ECA with custom kernel size
 eca = ECA(
         kernel_size=kernel_size, # Neighbourhood size, i.e., kernel size of the 1D convolution
         )
-output = eca(input)
 ```
 
 ### CBAM | [Paper](https://arxiv.org/abs/1807.06521)
@@ -49,7 +54,6 @@ cbam = CBAM(
         reduction_factor=reduction_factor, # Reduction factor for channel attention
         kernel_size=kernel_size, # Kernel size for spatial attention
         )
-output = cbam(input)
 ```
 
 ### BAM | [Paper](https://arxiv.org/abs/1807.06514)
@@ -63,7 +67,6 @@ bam = BAM(
         reduction_factor=reduction_factor, # Reduction factor for channel and spatial attention
         kernel_size=kernel_size, # Dilation for spatial attention
         )
-output = bam(input)
 ```
 
 ### GE | [Paper](https://arxiv.org/abs/1810.12348)
@@ -87,7 +90,4 @@ ge_params_plus = GEParamsPlus(
         extent=extent, # Extent factor, 0 for a global extent
         spatial_dim=spatial_dim, # Spatial dimension GE receives, required for a global extent
         )
-output_no_params = ge_no_params(input)
-output_params = ge_params(input)
-output_params_plus = ge_params_plus(input)
 ```

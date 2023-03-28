@@ -1,54 +1,37 @@
-from torch import Tensor
-from torch.nn import (
-	AdaptiveAvgPool2d,
-	Conv2d,
-	Module,
-	Sequential,
-	Sigmoid,
-	)
+"""
+Effective squeeze-and-excitation (eSE).
+"""
 
 
-class eSE(Module):
+import torch
+from torch import nn
+from torch.nn import functional as F
+
+
+class eSE(nn.Module):
 	"""
-	Effective squeeze-and-excitation
+	Effective squeeze-and-excitation.
+
+	Args:
+		in_dim (int): Number of input channels.
 	"""
 	def __init__(
 		self, 
 		in_dim: int,
 		) -> None:
-		"""
-		Sets up the modules
-		
-		Args:
-			in_dim (int): Number of input channels
-		"""
 		super().__init__()
 
-		self.squeeze = AdaptiveAvgPool2d(
-			output_size=1,
-			)
-		self.excitation = Sequential(
-			Conv2d(
+		self.excitation = nn.Sequential(
+			nn.Conv2d(
 				in_channels=in_dim,
 				out_channels=in_dim,
 				kernel_size=1,
 				),
-			Sigmoid(),
+			nn.Sigmoid(),
 			) 
 	
-	def forward(
-		self, 
-		input: Tensor,
-		) -> Tensor:
-		"""
-		Runs the input through the module
-
-		Args:
-			input (Tensor): Input
-		
-		Returns (Tensor): Result of the module
-		"""
-		squeezed = self.squeeze(input)
+	def forward(self, input: torch.Tensor) -> torch.Tensor:
+		squeezed = F.adaptive_avg_pool2d(input, 1)
 		attention = self.excitation(squeezed)
 		
 		output = attention*input

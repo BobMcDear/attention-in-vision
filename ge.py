@@ -1,88 +1,67 @@
+"""
+Gather-excite (GE).
+"""
+
+
 from math import log2
-from typing import (
-	Optional,
-	Tuple,
-	Union,
-	)
+from typing import Optional, Tuple, Union
 
-from torch import Tensor
-from torch.nn import (
-	AdaptiveAvgPool2d,
-	AvgPool2d,
-	BatchNorm2d,
-	Conv2d,
-	Module,
-	ReLU,
-	Sequential,
-	Sigmoid,
-	)
-from torch.nn.functional import interpolate
+import torch
+from torch import nn
+from torch.nn import functional as F
 
 
-class GENoParams(Module):
+class GENoParams(nn.Module):
 	"""
-	Gather-excite with no parameters
+	Gather-excite with no parameters.
+
+	Args:
+		extent (int): Extent. 0 for a global 
+		extent.
 	"""
 	def __init__(
 		self,
 		extent: int,
 		) -> None:
-		"""
-		Sets up the modules
-
-		Args:
-			extent (int): Extent. 0 for a global 
-			extent
-		"""
 		super().__init__()
 
 		if extent == 0:
-			self.gather = AdaptiveAvgPool2d(
-				output_size=1,
-				)
+			self.gather = nn.AdaptiveAvgPool2d(1)
 
 		else:
 			kernel_size = 2*extent - 1
-			padding = kernel_size//2
-			self.gather = AvgPool2d(
+			self.gather = nn.AvgPool2d(
 				kernel_size=kernel_size,
 				stride=extent,
-				padding=padding,
+				padding=kernel_size//2,
 				count_include_pad=False,
 				)
 
-		self.sigmoid = Sigmoid()
-	
-	def forward(
-		self, 
-		input: Tensor,
-		) -> Tensor:
-		"""
-		Runs the input through the module
-		
-		Args:
-			input (Tensor): Input
-		
-		Returns (Tensor): Result of the module
-		"""
-		batch_size, in_dim, height, width = input.shape
-
+	def forward(self, input: torch.Tensor) -> torch.Tensor:
 		gathered = self.gather(input)
-
-		attention = interpolate(
+		attention = F.interpolate(
 			input=gathered,
-			size=(height, width),
+			size=input.shape[-2:],
 			mode='nearest',
 			)
-		attention = self.sigmoid(attention)
+		attention = F.sigmoid(attention)
 
 		output = attention*input
 		return output
 
 
-class GEParams(Module):
+class GEParams(nn.Module):
 	"""
-	Gather-excite with parameters
+	Gather-excite with parameters.
+	
+	Args:
+		in_dim (int): Number of input channels.
+		extent (int): Extent. 0 for a global
+		extent.
+		spatial_dim (Optional[Union[Tuple[int, int], int]]):
+		Spatial dimension of the input, required for a global 
+		extent.
+		Default is None.
 	"""
 	def __init__(
 		self,
@@ -90,38 +69,24 @@ class GEParams(Module):
 		extent: int,
 		spatial_dim: Optional[Union[Tuple[int, int], int]] = None,
 		) -> None:
-		"""
-		Sets up the modules
-
-		Args:
-			in_dim (int): Number of input channels
-			extent (int): Extent. 0 for a global
-			extent
-			spatial_dim (Optional[Union[Tuple[int, int], int]]):
-			Spatial dimension of the input, required for a global 
-			extent.
-			Default is None
-		"""
 		super().__init__()
 
 		if extent == 0:
-			self.gather = Sequential(
-				Conv2d(
+			self.gather = nn.Sequential(
+				nn.Conv2d(
 					in_channels=in_dim,
 					out_channels=in_dim,
 					kernel_size=spatial_dim,
 					groups=in_dim,
 					bias=False,
 					),
-				BatchNorm2d(
-					num_features=in_dim,
-					),
+				nn.BatchNorm2d(in_dim),
 				)
 
 		else:
 			n_layers = int(log2(extent))
 			layers = n_layers * [
-				Conv2d(
+				nn.Conv2d(
 					in_channels=in_dim,
 					out_channels=in_dim,
 					kernel_size=3,
@@ -130,85 +95,66 @@ class GEParams(Module):
 					groups=in_dim,
 					bias=False,
 					),
-				BatchNorm2d(
-					num_features=in_dim,
-					),
-				ReLU(),
+				nn.BatchNorm2d(in_dim),
+				nn.ReLU(),
 				]
 			layers = layers[:-1]
-			self.gather = Sequential(*layers)
+			self.gather = nn.Sequential(*layers)
 
-		self.sigmoid = Sigmoid()
-	
-	def forward(
-		self, 
-		input: Tensor,
-		) -> Tensor:
-		"""
-		Runs the input through the module
-
-		Args:
-			input (Tensor): Input
-		
-		Returns (Tensor): Result of the module
-		"""
-		batch_size, in_dim, height, width = input.shape
-
+	def forward(self, input: torch.Tensor) -> torch.Tensor:
 		gathered = self.gather(input)
-
-		attention = interpolate(
+		attention = F.interpolate(
 			input=gathered,
-			size=(height, width),
+			size=input.shape[-2:],
 			mode='nearest',
 			)
-		attention = self.sigmoid(attention)
+		attention = F.sigmoid(attention)
 
 		output = attention*input
 		return output
 
 
-class GEParamsPlus(Module):
+class GEParamsPlus(nn.Module):
 	"""
-	Gather-excite with parameters, including for the excite unit
+	Gather-excite with parameters, including for the excite unit.
+
+	Args:
+		in_dim (int): Number of input channels.
+		extent (int): Extent. 0 for a global
+		extent.
+		reduction_factor (int): Reduction factor for the 
+		bottleneck layer of the excite module.
+		Default is 16.
+		spatial_dim (Optional[Union[Tuple[int, int], int]]):
+		Spatial dimension of the input, required for a global 
+		extent.
+		Default is None.
 	"""
 	def __init__(
 		self,
 		in_dim: int,
 		extent: int,
+		reduction_factor: int = 16,
 		spatial_dim: Optional[Union[Tuple[int, int], int]] = None,
 		) -> None:
-		"""
-		Sets up the modules
-
-		Args:
-			in_dim (int): Number of input channels
-			extent (int): Extent. 0 for a global
-			extent
-			spatial_dim (Optional[Union[Tuple[int, int], int]]):
-			Spatial dimension of the input, required for a global 
-			extent.
-			Default is None
-		"""
 		super().__init__()
 
 		if extent == 0:
-			self.gather = Sequential(
-				Conv2d(
+			self.gather = nn.Sequential(
+				nn.Conv2d(
 					in_channels=in_dim,
 					out_channels=in_dim,
 					kernel_size=spatial_dim,
 					groups=in_dim,
 					bias=False,
 					),
-				BatchNorm2d(
-					num_features=in_dim,
-					),
+				nn.BatchNorm2d(in_dim),
 				)
 
 		else:
 			n_layers = int(log2(extent))
 			layers = n_layers * [
-				Conv2d(
+				nn.Conv2d(
 					in_channels=in_dim,
 					out_channels=in_dim,
 					kernel_size=3,
@@ -217,53 +163,35 @@ class GEParamsPlus(Module):
 					groups=in_dim,
 					bias=False,
 					),
-				BatchNorm2d(
-					num_features=in_dim,
-					),
-				ReLU(),
+				nn.BatchNorm2d(in_dim),
+				nn.ReLU(),
 				]
 			layers = layers[:-1]
-			self.gather = Sequential(*layers)
+			self.gather = nn.Sequential(*layers)
 		
-		bottleneck_dim = in_dim//16
-		self.mlp = Sequential(
-			Conv2d(
+		bottleneck_dim = in_dim//reduction_factor
+		self.mlp = nn.Sequential(
+			nn.Conv2d(
 				in_channels=in_dim,
 				out_channels=bottleneck_dim,
 				kernel_size=1,
 				),
-			ReLU(),
-			Conv2d(
+			nn.ReLU(),
+			nn.Conv2d(
 				in_channels=bottleneck_dim,
 				out_channels=in_dim,
 				kernel_size=1,
 				),
 			)
-		self.sigmoid = Sigmoid()
 	
-	def forward(
-		self, 
-		input: Tensor,
-		) -> Tensor:
-		"""
-		Runs the input through the module
-		
-		Args:
-			input (Tensor): Input
-		
-		Returns (Tensor): Result of the module
-		"""
-		batch_size, in_dim, height, width = input.shape
-
+	def forward(self, input: torch.Tensor) -> torch.Tensor:
 		gathered = self.gather(input)
-
 		attention = self.mlp(gathered)
-		attention = interpolate(
+		attention = F.interpolate(
 			input=attention,
-			size=(height, width),
-			mode='nearest',
+			size=input.shape[-2:],
 			)
-		attention = self.sigmoid(attention)
+		attention = F.sigmoid(attention)
 
 		output = attention*input
 		return output
