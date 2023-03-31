@@ -69,7 +69,7 @@ class ECA(nn.Module):
 			padding=kernel_size//2,
 			bias=False,
 			)
-	
+
 	def forward(self, input: torch.Tensor) -> torch.Tensor:
 		avg_pooled = F.adaptive_avg_pool2d(input, 1)
 		avg_pooled = avg_pooled.squeeze(2)

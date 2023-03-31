@@ -46,7 +46,7 @@ class Branch(nn.Module):
 			)
 		self.bn = nn.BatchNorm2d(out_dim)
 		self.relu = nn.ReLU()
-	
+
 	def forward(self, input: torch.Tensor) -> torch.Tensor:
 		output = self.conv(input)
 		output = self.bn(output)
@@ -89,7 +89,7 @@ class Split(nn.Module):
 				)
 			branches.append(branch)
 		self.branches = nn.ModuleList(branches)
-	
+
 	def forward(self, input: torch.Tensor) -> torch.Tensor:
 		outputs = []
 		for branch in self.branches:
@@ -127,7 +127,7 @@ class Fuse(nn.Module):
 			nn.BatchNorm2d(reduced_dim),
 			nn.ReLU(),
 			)
-	
+
 	def forward(self, input: torch.Tensor) -> torch.Tensor:
 		summed = input.sum(1)
 		avg_pooled = F.adaptive_avg_pool2d(summed, 1)
@@ -162,7 +162,7 @@ class Select(nn.Module):
 			bias=False,
 			)
 		self.softmax = nn.Softmax(dim=1)
-	
+
 	def forward(self, input: torch.Tensor, z: torch.Tensor) -> torch.Tensor:
 		batch_size, n_branches, in_dim, height, width = input.shape
 

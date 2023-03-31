@@ -29,7 +29,7 @@ class Router(nn.Module):
 			out_channels=n_experts,
 			kernel_size=1,
 			)
-	
+
 	def forward(self, input: torch.Tensor) -> torch.Tensor:
 		avg_pooled = F.adaptive_avg_pool2d(input, 1)
 		attention = self.linear(avg_pooled)

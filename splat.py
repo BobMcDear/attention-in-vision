@@ -45,7 +45,7 @@ class Branches(nn.Module):
 			nn.BatchNorm2d(branches_out_dim),
 			nn.ReLU(),
 			)
-	
+
 	def forward(self, input: torch.Tensor) -> torch.Tensor:
 		batch_size, in_dim, height, width = input.shape
 		output = self.branches(input)
@@ -78,7 +78,7 @@ class RadixSoftmax(nn.Module):
 		
 		else:
 			self.gate = nn.Softmax(dim=1)
-	
+
 	def forward(self, input: torch.Tensor) -> torch.Tensor:
 		batch_size, in_dim, height, width = input.shape
 
@@ -154,7 +154,7 @@ class SplAt(nn.Module):
 			cardinality=cardinality,
 			radix=radix,
 			)
-	
+
 	def forward(self, input: torch.Tensor) -> torch.Tensor:
 		batch_size = len(input)
 

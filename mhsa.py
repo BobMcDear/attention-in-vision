@@ -49,7 +49,7 @@ def get_attention(queries: torch.Tensor, keys: torch.Tensor) -> torch.Tensor:
 	Args:
 		queries (torch.Tensor): Queries.
 		keys (torch.Tensor): Keys.
-	
+
 	Returns (torch.Tensor): Attention calculated using the provided queries
 	and keys.
 	"""
@@ -83,7 +83,7 @@ class MHSA(nn.Module):
 			in_features=in_dim,
 			out_features=in_dim,
 			)
-	
+
 	def forward(self, input: torch.Tensor) -> torch.Tensor:
 		batch_size, n_tokens, in_dim = input.shape
 

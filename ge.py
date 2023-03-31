@@ -168,7 +168,7 @@ class GEParamsPlus(nn.Module):
 				]
 			layers = layers[:-1]
 			self.gather = nn.Sequential(*layers)
-		
+
 		bottleneck_dim = in_dim//reduction_factor
 		self.mlp = nn.Sequential(
 			nn.Conv2d(
@@ -183,7 +183,7 @@ class GEParamsPlus(nn.Module):
 				kernel_size=1,
 				),
 			)
-	
+
 	def forward(self, input: torch.Tensor) -> torch.Tensor:
 		gathered = self.gather(input)
 		attention = self.mlp(gathered)

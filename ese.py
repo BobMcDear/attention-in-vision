@@ -29,7 +29,7 @@ class eSE(nn.Module):
 				),
 			nn.Sigmoid(),
 			) 
-	
+
 	def forward(self, input: torch.Tensor) -> torch.Tensor:
 		squeezed = F.adaptive_avg_pool2d(input, 1)
 		attention = self.excitation(squeezed)

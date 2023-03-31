@@ -95,7 +95,7 @@ class BAMSpatialAttention(nn.Module):
 			out_channels=1,
 			kernel_size=1,
 			)
-	
+
 	def forward(self, input: torch.Tensor) -> torch.Tensor:
 		attention = self.reduce_1(input)
 		attention = self.convs(attention)

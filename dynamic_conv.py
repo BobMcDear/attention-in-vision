@@ -47,7 +47,7 @@ class Router(nn.Module):
 				kernel_size=1,
 				)
 			)
-	
+
 	def forward(self, input: torch.Tensor) -> torch.Tensor:
 		avg_pooled = F.adaptive_avg_pool2d(input, 1)
 		attention = self.mlp(avg_pooled)/self.temperature

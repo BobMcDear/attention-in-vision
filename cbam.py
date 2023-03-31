@@ -39,7 +39,7 @@ class CBAMChannelAttention(nn.Module):
 				kernel_size=1,
 				),
 			)
-	
+
 	def forward(self, input: torch.Tensor) -> torch.Tensor:
 		avg_pooled = F.adaptive_avg_pool2d(input, 1)
 		max_pooled = F.adaptive_avg_pool2d(input, 1)
