@@ -15,7 +15,7 @@
 &nbsp;&nbsp;&nbsp; • <strong>[Multi-Headed Self-Attention (MHSA)](#multi-headed-self-attention-mhsa--paper)</strong><br>
 
 ## Introduction
-PyTorch implementations of popular attention mechanisms in computer vision can be found in this repository. The code aims to be lean, usable out of the box, and efficient, but first and foremost readable and instructive for those seeking to explore attention modules in vision.
+PyTorch implementations of popular attention mechanisms in computer vision can be found in this repository. The code aims to be lean, usable out of the box, and efficient, but first and foremost readable and instructive for those seeking to explore attention modules in vision. This repository is also accompanied by a [blog post](https://bobmcdear.github.io/posts/attention-in-vision/) that studies each layer in detail and elaborates on the code, so the two should be considered complementary material.
 ## Modules
 Below is a list of available attention layers, as well as their sample usage.
 
